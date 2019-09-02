@@ -1,0 +1,171 @@
+input#sta-name {
+	width:100px;
+	font-family:Microsoft YaHei;
+	font-size:18px;
+	font-weight:bold;
+}
+table {
+	text-align:center;
+}
+table#top-items {
+	text-align:center;
+	height:40px;
+	background:linear-gradient(#3CB46E, #1E9650, #007832);
+}
+table#query-div {
+	height:50px;
+}
+table#all-stations {
+	width:800px;
+	color:#0A823C;
+	background:#EEE;
+}
+tr#thead2 {
+	line-height:36px;
+	background:linear-gradient(#50B4E6, #3296C8, #1478AA);
+	color:#FAFAFA;
+	border:1px solid #FFF;
+}
+tr.table-content {
+	line-height:30px;
+}
+td.table-content-time {
+	border:1px solid #FFF;
+}
+td.table-content-stations {
+	border:1px solid #FFF;
+	text-indent:2em;
+}
+div#top-of-page {
+	width:1200px;
+	height:62px;
+	position:absolute;
+	left:6%;
+	top:2%;
+	position:absolute;
+	border:1px solid #FFF;
+}
+div#title-image {
+	float:left;
+	width:296px;
+	height:60px;
+	left:1%;
+	top:1%;
+	border:1px solid #FFF;
+}
+div#top-options {
+	float:right;
+	width:896px;
+	height:60px;
+	border:1px solid #FFF;
+}
+div#tipbox {
+	display:none;
+	width:250px;
+	height:80px;
+	left:42%;
+	top:36%;
+	border-radius:10px;
+	position:fixed;
+}
+div#tipbox-head {
+	background:linear-gradient(#50B4E6, #3296C8, #1478AA);
+	width:250px;
+	height:36px;
+	left:-1px;
+	top:-1px;
+	border-radius:10px 10px 0px 0px;
+	position:relative;
+}
+div#qishoushijian {
+	color:#FFF;
+	width:200px;
+	height:30px;
+	left:3%;
+	top:10%;
+	position:relative;
+	font-size:20px;
+	font-weight:bold;
+}
+div#close-button {
+	width:30px;
+	height:30px;
+	left:86%;
+	top:-27px;
+	position:relative;
+	font-size:30px;
+	font-weight:bold;
+	line-height:25px;
+	border-radius:15px;
+	background:-webkit-linear-gradient(left top, #FF87A5, #78001E);
+	background:-o-linear-gradient(bottom right, #FF87A5, #78001E);
+	background:-moz-linear-gradient(bottom right, #FF87A5, #78001E);
+	background:linear-gradient(bottom right, #FF87A5, #961E3C);
+}
+div#tipbox-content {
+	width:250px;
+	height:43px;
+	left:-1px;
+	top:-1px;
+	border-radius:0px 0px 10px 10px;
+	position:relative;
+	font-size:24px;
+	background:#C8D7E6;
+}
+span#span1 {
+	margin-left:8px;
+	line-height:40px;
+	color:#0036EB;
+}
+span#span1-station {
+	color:#050;
+}
+span#span1-time {
+	color:#000;
+}
+div#return-to-top {
+	position:fixed;
+	left:95%;
+	top:75%;
+}
+tr#thead {
+	background:linear-gradient(#50B4E6, #3296C8, #1478AA);
+	color:#FAFAFA;
+}
+a, a:HOVER, a:ACTIVE, a:VISITED {
+	text-decoration:none;
+}
+a#to_offline, a#query_by_sta_to_sta, a#query_transit, a#query_ticket_price {
+	color:#FAFAFA;
+	font-weight:bold;
+}
+a#close-box, a#close-box:VISITED, a#close-box:HOVER, a#close-box:ACTIVE {
+	text-decoration:none;
+	color:#FFF;
+	left:3px;
+	position:relative;
+}
+a#query {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#5050DC, #2828B4, #00008C);
+}
+a#query:HOVER {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#6E6EFA, #4646D2, #1E1EAA);
+}
+a#query:ACTIVE {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#1E1EAA, #4646D2, #6E6EFA);
+}

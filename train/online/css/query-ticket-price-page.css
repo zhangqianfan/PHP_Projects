@@ -1,0 +1,187 @@
+input#arrival, input#departure {
+	width:100px;
+	font-family:Microsoft YaHei;
+	font-size:18px;
+	font-weight:bold;
+}
+table {
+	text-align:center;
+}
+table#top-items {
+	width:748px;
+	top:15%;
+	right:2%;
+	position:relative;
+	text-align:center;
+	height:40px;
+	background:linear-gradient(#3CB46E, #1E9650, #007832);
+}
+table#query-div {
+	text-align:center;
+	height:50px;
+}
+table#date-picker {
+	display:none;
+	border:1px solid #CCC;
+	position:absolute;
+	left:580px;
+	top:200px;
+	z-index:1;
+	background:#FFF;
+}
+table#train-thead {
+	background:linear-gradient(#B450C8, #9632AA, #78148C);
+	color:#FFF;
+	border:1px solid #FFF;
+	width:750px;
+	height:36px;
+}
+table#results-head {
+	display:block;
+	text-align:center;
+}
+table#results-content {
+	background:#DCD2FA
+	display:block;
+	text-align:center;
+	border:1px solid #FFF;
+}
+div#top-of-page {
+	width:1200px;
+	height:62px;
+	position:absolute;
+	left:6%;
+	top:2%;
+	position:absolute;
+	border:1px solid #FFF;
+}
+div#title-image {
+	float:left;
+	width:296px;
+	height:60px;
+	left:1%;
+	top:1%;
+	border:1px solid #FFF;
+}
+div#top-options {
+	float:right;
+	width:896px;
+	height:60px;
+	border:1px solid #FFF;
+}
+div#div1 {
+	background:#E6E6F0;
+	display:none;
+	position:fixed;
+	align:center;
+	width:750px;
+	height:411px;
+	border:1px solid #000;
+	top:18%;
+	left:23.4%;
+	z-index:1;
+}
+div#div2 {
+	width:690px;
+	height:30px;
+	float:left;
+	margin-top:1%;
+	margin-left:2%;
+}
+div#div3 {
+	width:30px;
+	height:30px;
+	float:right;
+	margin-top:0;
+}
+div#div4 {
+	align:center;
+	width:750px;
+	height:330px;
+	overflow:hidden;
+}
+div#div5 {
+	width:740px;
+	height:23px;
+	position:relative;
+	left:0.5%;
+	top:-6%;
+}
+div#return-to-top {
+	position:fixed;
+	left:95%;
+	top:75%;
+}
+tr#thead {
+	background:linear-gradient(#50B4E6, #3296C8, #1478AA);
+	color:#FAFAFA;
+}
+a, a:HOVER, a:ACTIVE, a:VISITED {
+	text-decoration:none;
+}
+a#to_offline, a#query_by_sta_to_sta, a#query_transit, a#query_start_time {
+	color:#FAFAFA;
+	font-weight:bold;
+}
+a.date-anchor {
+	color: #B432B4;
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+}
+a#selected-day {
+	color: #1E9650;
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+}
+a#today-day {
+	color: #C83232;
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+}
+a.date-anchor:HOVER, a.date-anchor:ACTIVE, a#selected-day:HOVER, a#selected-day:ACTIVE, a#today-day:HOVER, a#today-day:ACTIVE {
+	color: #0006FA;
+	font-family:Arial;
+	font-size:18px;
+	font-weight:bold;
+}
+a#query, a#alt {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#5050DC, #2828B4, #00008C);
+}
+a#query:HOVER, a#alt:HOVER {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#6E6EFA, #4646D2, #1E1EAA);
+}
+a#query:ACTIVE, #alt:ACTIVE {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#1E1EAA, #4646D2, #6E6EFA);
+}
+a#hide-train-detail {
+	color:#000;
+	font-size:24px;
+	font-weight:bold;
+}
+a#hide-train-detail:HOVER, a#hide-train-detail:ACTIVE {
+	color:#FA0600;
+	font-size:24px;
+	font-weight:bold;
+}
+select#ticket-type {
+	font-family:Microsoft YaHei;
+	font-size:16px;
+}
