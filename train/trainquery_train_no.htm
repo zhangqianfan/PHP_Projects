@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>车次查询</title>
+<link rel="stylesheet" type="text/css" href="css/train_no_page.css" >
+</head>
+<script src="alltrains/K.js"></script>
+<script src="alltrains/T.js"></script>
+<script src="alltrains/Z.js"></script>
+<script src="alltrains/G.js"></script>
+<script src="alltrains/D.js"></script>
+<script src="alltrains/C.js"></script>
+<script src="alltrains/P.js"></script>
+<script type="text/javascript">
+function doTrainNoQuery(){
+	var a = document.getElementById("results"); // 经停站信息表格用a表示
+	for (var xn = a.rows.length - 1; xn > 0; xn--) { // 必须让行标递减，否则无法正常删除行
+		a.deleteRow(xn);
+	}
+	var checi = document.getElementById("train_no").value;
+	var reg = /^[ZTKGDC]{0,1}[0-9]{1,4}$/g;
+	if (checi == "") alert("请输入车次！");
+	else if (!reg.test(checi)) alert("车次输入错误！");
+	else {
+		var num = parseInt(checi.substr(1));
+		var typ = checi.substr(0, 1);
+		var stations_num = 0;
+		switch (typ) {
+			case "K":
+				stations_num = k[num].length / 5;break;
+			case "T":
+				stations_num = t[num].length / 5;break;
+			case "Z":
+				stations_num = z[num].length / 5;break;
+			case "G":
+				stations_num = g[num].length / 5;break;
+			case "D":
+				stations_num = d[num].length / 5;break;
+			case "C":
+				stations_num = c[num].length / 5;break;
+			default:
+				stations_num = p[checi].length / 5;break;
+		}
+		if (stations_num) {
+			for (var i = 1; i <= stations_num; i++) {
+				var tr = a.insertRow(i);
+				tr.setAttribute("id", "tline_" + i);
+				tr.setAttribute("style", "color:#FFF;line-height:25px;background:#B450C8");
+				tr.setAttribute("onmouseover", "showTrBgColor('tline_" + i + "', '#1E9650')");
+				tr.setAttribute("onmouseout", "showTrBgColor('tline_" + i + "', '#B450C8')");
+				for (var j = 0; j < 5; j++) {
+					var td = tr.insertCell(j);
+					switch (typ) {
+						case "K":
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? k[num][(i - 1) * 5 + j] + "分钟" : k[num][(i - 1) * 5 + j];break;
+						case "T":
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? t[num][(i - 1) * 5 + j] + "分钟" : t[num][(i - 1) * 5 + j];break;
+						case "Z":
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? z[num][(i - 1) * 5 + j] + "分钟" : z[num][(i - 1) * 5 + j];break;
+						case "G":
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? g[num][(i - 1) * 5 + j] + "分钟" : g[num][(i - 1) * 5 + j];break;
+						case "D":
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? d[num][(i - 1) * 5 + j] + "分钟" : d[num][(i - 1) * 5 + j];break;
+						case "C":
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? c[num][(i - 1) * 5 + j] + "分钟" : c[num][(i - 1) * 5 + j];break;
+						default:
+							td.innerHTML = (j == 4 && i != 1 && i != stations_num) ? p[checi][(i - 1) * 5 + j] + "分钟" : p[checi][(i - 1) * 5 + j];break;
+					}
+				}
+			}
+		}
+		else alert("没有该车次的信息！");
+	}
+}
+function showTrBgColor(idname, colorcode){ // 将指定ID的表格行背景色设为指定颜色
+	document.getElementById(idname).style.background = colorcode;
+}
+</script>
+<body style="font-family:Microsoft YaHei;font-size:16px;">
+<h2 align="center">车次查询</h2>
+<table id="top_items" align="center" style="width:600px;">
+<tr>
+<td style="width:200px"><a id="trainquery_sta" href="trainquery_sta.htm">车站查询</a></td>
+<td style="width:200px"><a id="trainquery_sta_to_sta" href="trainquery_sta_to_sta.htm">站到站查询</a></td>
+<td style="width:200px"><a id="trainquery_train_no" href="trainquery_train_no.htm">车次查询</a></td>
+</tr>
+</table>
+<table id="query_div" align="center" style="width:600px;">
+<tr style="line-height:30px;" valign="middle">
+<td>车次：<input type="text" id="train_no" maxlength="5"/></td>
+<td><a href="javascript:;" id="query" onclick="doTrainNoQuery()">查询</a></td>
+</tr>
+</table>
+<table id="results" align="center" border="1" cellpadding="1" cellspacing="0" style="width:600px;">
+<tr id="thead" style="line-height:30px">
+<th style="width:75px">站序</th>
+<th style="width:180px">站名</th>
+<th style="width:90px">到点</th>
+<th style="width:90px">开点</th>
+<th style="width:165px">停留时长</th>
+</tr>
+</table>
+</body>
+</html>

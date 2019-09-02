@@ -1,0 +1,587 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>车站查询</title>
+<link rel="stylesheet" type="text/css" href="css/sta_page.css" >
+</head>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="alltrains/K.js"></script>
+<script src="alltrains/T.js"></script>
+<script src="alltrains/Z.js"></script>
+<script src="alltrains/G.js"></script>
+<script src="alltrains/D.js"></script>
+<script src="alltrains/C.js"></script>
+<script src="alltrains/P.js"></script>
+<script src="js/zmzd.js"></script>
+<script type="text/javascript">
+function doStaNameQuery() {
+	var b = document.getElementById("results"); // 查询结果表格用b表示
+	for (var yn = b.rows.length - 1; yn > 0; yn--) { // 必须让行标递减，否则无法正常删除行
+		b.deleteRow(yn);
+	}
+	var chezhan = document.getElementById("station").value;
+	if (chezhan == "") {
+		alert("请输入车站名！");
+	}
+	else {
+		var chezhan_code = encodeURI(chezhan);
+		chezhan_code = chezhan_code.replace(/%/g, "-");
+		for (var p1 = 1; p1 < zmname.length; p1++) {
+			if (zmname[p1] == chezhan_code) break;
+		}
+		if (p1 < zmname.length) {
+			var p2 = 1;
+			var all_res_rows1 = new Array(); // 定义一个二维数组存放查询结果
+			// 快速
+			for (var num1 = 3; num1 < 9863; num1++) {
+				if (k[num1].length != 0) {
+					for (var num2 = 0; num2 < k[num1].length; num2++) {
+						if (k[num1][num2] == chezhan) break;
+					}
+					if (num2 < k[num1].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "K" + num1;
+						for (var num3 = 2; num3 < 5; num3++) {
+							all_res_rows1[p2][num3] = k[num1][num2 + num3 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 特快
+			for (var num4 = 7; num4 < 9595; num4++) {
+				if (t[num4].length != 0) {
+					for (var num5 = 0; num5 < t[num4].length; num5++) {
+						if (t[num4][num5] == chezhan) break;
+					}
+					if (num5 < t[num4].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "T" + num4;
+						for (var num6 = 2; num6 < 5; num6++) {
+							all_res_rows1[p2][num6] = t[num4][num5 + num6 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 直达
+			for (var num7 = 1; num7 < 9879; num7++) {
+				if (z[num7].length != 0) {
+					for (var num8 = 0; num8 < z[num7].length; num8++) {
+						if (z[num7][num8] == chezhan) break;
+					}
+					if (num8 < z[num7].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "Z" + num7;
+						for (var num9 = 2; num9 < 5; num9++) {
+							all_res_rows1[p2][num9] = z[num7][num8 + num9 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 高铁
+			for (var num10 = 1; num10 < 9649; num10++) {
+				if (g[num10].length != 0) {
+					for (var num11 = 0; num11 < g[num10].length; num11++) {
+						if (g[num10][num11] == chezhan) break;
+					}
+					if (num11 < g[num10].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "G" + num10;
+						for (var num12 = 2; num12 < 5; num12++) {
+							all_res_rows1[p2][num12] = g[num10][num11 + num12 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 动车
+			for (var num13 = 1; num13 < 9983; num13++) {
+				if (d[num13].length != 0) {
+					for (var num14 = 0; num14 < d[num13].length; num14++) {
+						if (d[num13][num14] == chezhan) break;
+					}
+					if (num14 < d[num13].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "D" + num13;
+						for (var num15 = 2; num15 < 5; num15++) {
+							all_res_rows1[p2][num15] = d[num13][num14 + num15 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 城际
+			for (var num16 = 1001; num16 < 8611; num16++) {
+				if (c[num16].length != 0) {
+					for (var num17 = 0; num17 < c[num16].length; num17++) {
+						if (c[num16][num17] == chezhan) break;
+					}
+					if (num17 < c[num16].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "C" + num16;
+						for (var num18 = 2; num18 < 5; num18++) {
+							all_res_rows1[p2][num18] = c[num16][num17 + num18 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 普快
+			for (var num19 = 1133; num19 < 7584; num19++) {
+				if (p[num19].length != 0) {
+					for (var num20 = 0; num20 < p[num19].length; num20++) {
+						if (p[num19][num20] == chezhan) break;
+					}
+					if (num20 < p[num19].length) {
+						all_res_rows1[p2] = new Array(5);
+						all_res_rows1[p2][0] = p2;
+						all_res_rows1[p2][1] = "P" + num19;
+						for (var num21 = 2; num21 < 5; num21++) {
+							all_res_rows1[p2][num21] = p[num19][num20 + num21 - 1];
+						}
+						p2++;
+					}
+				}
+			}
+			// 将二维数组数据按行去重(同一趟车不同车次号只显示一行查询结果)
+			var all_res_rows2 = new Array();
+			var all_res_rows3 = new Array();
+			var table_len = all_res_rows1.length;
+			// 为防止因数组all_res_rows1内容的变化影响数组all_res_rows2
+			// 故此处必须将数组all_res_rows1的各个元素逐一拷贝至一个新的数组all_res_rows3中
+			for (var np = 1; np < table_len; np++) {
+				all_res_rows3[np] = new Array(5);
+			}
+			for (var xp = 1; xp < table_len; xp++) {
+				for (var yp = 0; yp < 5; yp++) {
+					all_res_rows3[xp][yp] = all_res_rows1[xp][yp];
+				}
+			}
+			var p3 = 1;
+			for (var i3 = 1; i3 < table_len; i3++) {
+				if (i3 == 1) {
+					all_res_rows2[p3] = all_res_rows3[i3];
+					// 注意：下述代码中，凡是包含“+ "/" +”的语句都会使数组all_res_rows3的内容发生变化！！！
+					if (isSameTrain(all_res_rows1, i3, i3 + 1)) {
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 1][1];
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 2)) {
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 2][1];
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 3)) {
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 3][1];
+					}
+					p3++;
+				}
+				else if (i3 == 2) {
+					if (isSameTrain(all_res_rows1, i3, i3 + 1)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 1][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 - 1)) {
+						continue;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 2)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 2][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 3)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 3][1];
+						p3++;
+					}
+					else {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						p3++;
+					}
+				}
+				else if (i3 == 3) {
+					if (isSameTrain(all_res_rows1, i3, i3 + 1)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 1][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 - 1)) {
+						continue;
+					}	
+					else if (isSameTrain(all_res_rows1, i3, i3 + 2)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 2][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 - 2)) {
+						continue;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 3)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 3][1];
+						p3++;
+					}
+					else {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						p3++;
+					}
+				}
+				else {
+					if (isSameTrain(all_res_rows1, i3, i3 + 1)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 1][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 - 1)) {
+						continue;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 2)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 2][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 - 2)) {
+						continue;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 + 3)) {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						all_res_rows2[p3][1] = all_res_rows2[p3][1] + "/" + all_res_rows3[i3 + 3][1];
+						p3++;
+					}
+					else if (isSameTrain(all_res_rows1, i3, i3 - 3)) {
+						continue;
+					}
+					else {
+						all_res_rows2[p3] = all_res_rows3[i3];
+						p3++;
+					}
+				}
+			}
+			// 重新按时间顺序添加所有行
+			// index=2：到点；index=3：开点
+			// 先排序
+			// 先按index=2冒泡排序
+			var tmp1, tmp2;
+			for (var xi = 1; xi < all_res_rows2.length - 1; xi++) {
+				for (var xj = 1; xj < all_res_rows2.length - xi; xj++) {
+					if (all_res_rows2[xj][2] > all_res_rows2[xj + 1][2]) {
+						for (var zp = 1; zp < 5; zp++) {
+							tmp1 = all_res_rows2[xj][zp];
+							all_res_rows2[xj][zp] = all_res_rows2[xj + 1][zp];
+							all_res_rows2[xj + 1][zp] = tmp1;
+						}
+					}	
+				}
+			}
+			// 再按index=3冒泡排序，注意此时要跳过终点站为当前站的车
+			for (var yi = 1; yi < all_res_rows2.length - 1; yi++) {
+				for (var yj = 1; yj < all_res_rows2.length - yi; yj++) {
+					if (all_res_rows2[yj][3] > all_res_rows2[yj + 1][3] && all_res_rows2[yj][3] != "终点" && all_res_rows2[yj + 1][3] != "终点") {
+						for (var zp = 1; zp < 5; zp++) {
+							tmp2 = all_res_rows2[yj][zp];
+							all_res_rows2[yj][zp] = all_res_rows2[yj + 1][zp];
+							all_res_rows2[yj + 1][zp] = tmp2;
+						}
+					}
+					else if (all_res_rows2[yj][3] == "终点" && all_res_rows2[yj + 1][3] != "终点") {
+						if (all_res_rows2[yj][2] > all_res_rows2[yj + 1][3]) {
+							for (var zp = 1; zp < 5; zp++) {
+								tmp2 = all_res_rows2[yj][zp];
+								all_res_rows2[yj][zp] = all_res_rows2[yj + 1][zp];
+								all_res_rows2[yj + 1][zp] = tmp2;
+							}
+						}
+					}
+					else if (all_res_rows2[yj][3] != "终点" && all_res_rows2[yj + 1][3] == "终点") {
+						if (all_res_rows2[yj][3] > all_res_rows2[yj + 1][2]) {
+							for (var zp = 1; zp < 5; zp++) {
+								tmp2 = all_res_rows2[yj][zp];
+								all_res_rows2[yj][zp] = all_res_rows2[yj + 1][zp];
+								all_res_rows2[yj + 1][zp] = tmp2;
+							}
+						}
+					}
+				}
+			}
+			// 最后还需按出发时间(index=2)对排序做一修正
+			for (var xi = 1; xi < all_res_rows2.length - 1; xi++) {
+				for (var xj = 1; xj < all_res_rows2.length - xi; xj++) {
+					if (all_res_rows2[xj][2] > all_res_rows2[xj + 1][2] && all_res_rows2[xj][2] != "发站" && all_res_rows2[xj + 1][2] != "发站") {
+						for (var zp = 1; zp < 5; zp++) {
+							tmp1 = all_res_rows2[xj][zp];
+							all_res_rows2[xj][zp] = all_res_rows2[xj + 1][zp];
+							all_res_rows2[xj + 1][zp] = tmp1;
+						}
+					}	
+				}
+			}
+			// 再添加
+			for (var i4 = 1; i4 < all_res_rows2.length; i4++) {
+				if (all_res_rows2[i4][2] == "发站") all_res_rows2[i4][2] = "--:--";
+				if (all_res_rows2[i4][3] == "终点") all_res_rows2[i4][3] = "--:--";
+				var tr_new = b.insertRow(i4);
+				tr_new.setAttribute("id", "tline_" + i4);
+				tr_new.setAttribute("style", "color:#FFF;line-height:25px;background:#B450C8");
+				tr_new.setAttribute("onmouseover", "showTrBgColor('tline_" + i4 + "', '#1E9650')");
+				tr_new.setAttribute("onmouseout", "showTrBgColor('tline_" + i4 + "', '#B450C8')");
+				var td_new0 = tr_new.insertCell(0); td_new0.innerHTML = i4;
+				for (var i5 = 1; i5 < 5; i5++) {
+					var td_new = tr_new.insertCell(i5);
+					if (i5 == 1) {
+						td_new.innerHTML = "<a id='train_result_" + i4 + "' class='train_result' href='javascript:;'>" + delCharInStr(all_res_rows2[i4][i5], "P") + "</a>";
+					}
+					else if (i5 == 4 && all_res_rows2[i4][4] != "----") {
+						td_new.innerHTML = all_res_rows2[i4][i5] + "分钟";
+					}
+					else td_new.innerHTML = all_res_rows2[i4][i5];
+				}
+				var checi_num1, checi_num2;
+				if (hasSlash(all_res_rows2[i4][1])) {
+					checi_num1 = all_res_rows2[i4][1].substr(0, all_res_rows2[i4][1].indexOf("/"));
+				}
+				else checi_num1 = all_res_rows2[i4][1];
+				checi_num2 = checi_num1.substr(1);
+				var td_new5 = tr_new.insertCell(5);
+				var td_new6 = tr_new.insertCell(6);
+				switch (checi_num1.charAt(0)) {
+					case 'K':
+						td_new5.innerHTML = k[checi_num2][1];
+						td_new6.innerHTML = k[checi_num2][k[checi_num2].length - 4];
+						break;
+					case 'T':
+						td_new5.innerHTML = t[checi_num2][1];
+						td_new6.innerHTML = t[checi_num2][t[checi_num2].length - 4];
+						break;
+					case 'Z':
+						td_new5.innerHTML = z[checi_num2][1];
+						td_new6.innerHTML = z[checi_num2][z[checi_num2].length - 4];
+						break;
+					case 'G':
+						td_new5.innerHTML = g[checi_num2][1];
+						td_new6.innerHTML = g[checi_num2][g[checi_num2].length - 4];
+						break;
+					case 'D':
+						td_new5.innerHTML = d[checi_num2][1];
+						td_new6.innerHTML = d[checi_num2][d[checi_num2].length - 4];
+						break;
+					case 'C':
+						td_new5.innerHTML = c[checi_num2][1];
+						td_new6.innerHTML = c[checi_num2][c[checi_num2].length - 4];
+						break;
+					case 'P':
+						td_new5.innerHTML = p[checi_num2][1];
+						td_new6.innerHTML = p[checi_num2][p[checi_num2].length - 4];
+						break;
+					default:
+						td_new5.innerHTML = "null";
+						td_new6.innerHTML = "null";
+						break;
+				}
+				document.getElementById("train_result_" + i4).setAttribute("onclick", "showTrainInfo('" + all_res_rows2[i4][1] + "');");
+			}
+		}
+		else alert("车站输入错误！");
+	}
+}
+function delCharInStr(strArg, charArg) {
+	if (typeof(strArg) == "string" && typeof(charArg) == "string") {
+		return strArg.split(charArg).join("");
+	}
+}
+function showTrBgColor(idname, colorcode){ // 将指定ID的表格行背景色设为指定颜色
+	document.getElementById(idname).style.background = colorcode;
+}
+function isSameTrain(arr_2d, ln1, ln2) { // 判断一个二维数组所存放的某两行所表示的车次是否为同一趟车
+	if (typeof(arr_2d) == "object" && typeof(ln1) == "number" && typeof(ln2) == "number"
+		&& typeof(arr_2d[ln1]) == "object" && typeof(arr_2d[ln2]) == "object"
+		&& arr_2d[ln1].length == 5 && arr_2d[ln2].length == 5) {
+		return arr_2d[ln1][2] == arr_2d[ln2][2] && arr_2d[ln1][3] == arr_2d[ln2][3] && arr_2d[ln1][4] == arr_2d[ln2][4];
+	}
+	return false;
+}
+function hasSlash(strArg) { // 判断一个字符串中是否包含斜杠"/"
+	if (typeof(strArg) == "string") {
+		for (var i = 0; i < strArg.length; i++) {
+			if (strArg.charAt(i) == '/') break;
+		}
+		return i < strArg.length;
+	}
+	return false;
+}
+function showTrainInfo(train_str_arg) {
+	if (train_str_arg) {
+		var train_no_info0 = hasSlash(train_str_arg) ? train_str_arg.substr(0, train_str_arg.indexOf("/")) : train_str_arg;
+		var train_no_info1 = train_no_info0.substr(1);
+		var train_table0 = document.getElementById("train_table0");
+		for (var hn = train_table0.rows.length - 1; hn > 0; hn--) {
+			train_table0.deleteRow(hn);
+		}
+		document.getElementById("div1").style.display = "block";
+		$("#div4").scrollTop(0);
+		switch (train_no_info0.charAt(0)) {
+			case 'K':
+				document.getElementById("train_no_info").innerHTML = train_str_arg + "次（" + k[train_no_info1][1] + "——" + k[train_no_info1][k[train_no_info1].length - 4] + "） 新空调快速";
+				for (var i = 0; i < k[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && k[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = k[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = k[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			case 'T':
+				document.getElementById("train_no_info").innerHTML = train_str_arg + "次（" + t[train_no_info1][1] + "——" + t[train_no_info1][t[train_no_info1].length - 4] + "） 新空调特快";
+				for (var i = 0; i < t[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && t[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = t[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = t[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			case 'Z':
+				document.getElementById("train_no_info").innerHTML = train_str_arg + "次（" + z[train_no_info1][1] + "——" + z[train_no_info1][z[train_no_info1].length - 4] + "） 新空调直达";
+				for (var i = 0; i < z[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && z[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = z[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = z[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			case 'G':
+				document.getElementById("train_no_info").innerHTML = train_str_arg + "次（" + g[train_no_info1][1] + "——" + g[train_no_info1][g[train_no_info1].length - 4] + "） 高铁";
+				for (var i = 0; i < g[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && g[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = g[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = g[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			case 'D':
+				document.getElementById("train_no_info").innerHTML = train_str_arg + "次（" + d[train_no_info1][1] + "——" + d[train_no_info1][d[train_no_info1].length - 4] + "） 动车";
+				for (var i = 0; i < d[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && d[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = d[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = d[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			case 'C':
+				document.getElementById("train_no_info").innerHTML = train_str_arg + "次（" + c[train_no_info1][1] + "——" + c[train_no_info1][c[train_no_info1].length - 4] + "） 城际";
+				for (var i = 0; i < c[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && c[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = c[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = c[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			case 'P':
+				document.getElementById("train_no_info").innerHTML = delCharInStr(train_str_arg, "P") + "次（" + p[train_no_info1][1] + "——" + p[train_no_info1][p[train_no_info1].length - 4] + "） 普快";
+				for (var i = 0; i < p[train_no_info1].length / 5; i++) {
+					var train_tr_i = train_table0.insertRow(i + 1);
+					var train_td_0 = train_tr_i.insertCell(0);
+					train_td_0.innerHTML = i + 1;
+					for (var j = 1; j < 5; j++) {
+						var train_td_j = train_tr_i.insertCell(j);
+						if (j == 4 && p[train_no_info1][5 * i + j] != "----") {
+							train_td_j.innerHTML = p[train_no_info1][5 * i + j] + "分钟";
+						}
+						else train_td_j.innerHTML = p[train_no_info1][5 * i + j];
+					}
+				}
+				break;
+			default:
+				break;
+		}
+	}
+}
+function hideTrainTable() {
+	document.getElementById("div1").style.display = "none";
+}
+</script>
+<body style="font-family:Microsoft YaHei;font-size:16px;">
+<h2 align="center">车站查询</h2>
+<table id="top_items" align="center" style="width:750px;">
+<tr>
+<td style="width:250px"><a id="trainquery_sta" href="trainquery_sta.htm">车站查询</a></td>
+<td style="width:250px"><a id="trainquery_sta_to_sta" href="trainquery_sta_to_sta.htm">站到站查询</a></td>
+<td style="width:250px"><a id="trainquery_train_no" href="trainquery_train_no.htm">车次查询</a></td>
+</tr>
+</table>
+<table id="query_div" align="center" style="width:600px;">
+<tr style="line-height:30px;" valign="middle">
+<td>车站：<input type="text" id="station" /></td>
+<td><a href="javascript:;" id="query" onclick="doStaNameQuery()">查询</a></td>
+</tr>
+</table>
+<table id="results" align="center" border="1" cellpadding="1" cellspacing="0" style="width:750px">
+<tr id="thead" style="line-height:30px">
+<th style="width:75px">序号</th>
+<th style="width:150px">车次</th>
+<th style="width:90px">到点</th>
+<th style="width:90px">开点</th>
+<th style="width:105px">停留时长</th>
+<th style="width:120px">始发站</th>
+<th style="width:120px">终到站</th>
+</tr>
+</table>
+<div id="div1">
+<div id="div2"><span id="train_no_info" style="color:#0004FA;font-size:20px;font-weight:bold"></span></div>
+<div id="div3"><a id="hide_train_table0" href="javascript:;" onclick="hideTrainTable()">×</a></div>
+<div id="div4">
+<table id="train_table0" style="text-align:center" style="width:540px" border="0" cellpadding="1" cellspacing="3">
+<tr>
+<th style="width:69px">站序</th>
+<th style="width:174px">站名</th>
+<th style="width:84px">到点</th>
+<th style="width:84px">开点</th>
+<th style="width:129px">停留时长</th>
+</tr>
+</table>
+</div>
+</div>
+<div id="return_to_top" style="width:60px;height:60px">
+<a href="#top"><img src="img/return-to-top.jpg"></a>
+</div>
+</body>
+</html>
