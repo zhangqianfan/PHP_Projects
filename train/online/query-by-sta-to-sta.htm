@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>站到站查询（在线版）</title>
+<link rel="stylesheet" type="text/css" href="css/statosta-online-page.css" >
+</head>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/query-by-ajax1.js"></script>
+<script src="js/date-picker.js"></script>
+<script src="js/station-name.js"></script>
+<script type="text/javascript">
+function initDate() {
+	var d = new Date();
+	var year = d.getFullYear();
+	var month = (d.getMonth() < 9) ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
+	var day = (d.getDate() < 10) ? "0" + d.getDate() : d.getDate();
+	var fullDate = year + "-" + month + "-" + day;
+	document.getElementById("riqi").innerHTML = fullDate;
+	for (var i = 1; i < 31; i++) {
+		var d2 = new Date();
+		d2.setDate(d2.getDate() + (i - 1));
+		var year2 = d2.getFullYear();
+		var month2 = (d2.getMonth() < 9) ? "0" + (d2.getMonth() + 1) : d2.getMonth() + 1;
+		var day2 = (d2.getDate() < 10) ? "0" + d2.getDate() : d2.getDate();
+		var fullDate2 = year2 + "-" + month2 + "-" + day2;
+		var monthdate = fullDate2.substr(5);
+		document.getElementById("monthdate" + i).innerHTML = monthdate;
+		document.getElementById("da" + i).setAttribute("name", fullDate2);
+		var allWeeks = new Array("日", "一", "二", "三", "四", "五", "六");
+		document.getElementById("weeks" + i).innerHTML = allWeeks[d2.getDay()];
+	}
+}
+function isZmnameLegal() { // 判断出发站、目的站站名是否合法
+	var fromSta = document.getElementById("departure").value;
+	var toSta = document.getElementById("arrival").value;
+	if (fromSta && toSta) {
+		for (var p1 = 0; p1 < station_names_str.length; p1++) {
+			if (station_names_arr[p1][1] == fromSta) break;
+		}
+		for (var p2 = 0; p2 < station_names_str.length; p2++) {
+			if (station_names_arr[p2][1] == toSta) break;
+		}
+		return p1 < station_names_str.length && p2 < station_names_str.length;
+	}
+	return false;
+}
+function altDepArr() { // 交换发到站
+	var tmp;
+	if (document.getElementById("departure").value == "") {
+		alert("请输入出发站！");
+	}
+	else if (document.getElementById("arrival").value == "") {
+		alert("请输入目的站！");
+	}
+	else if (document.getElementById("departure").value == document.getElementById("arrival").value) {
+		alert("出发站不能和目的站相同！");
+	}
+	else if (isZmnameLegal()) {
+		tmp = document.getElementById("departure").value;
+		document.getElementById("departure").value = document.getElementById("arrival").value;
+		document.getElementById("arrival").value = tmp;
+	}
+	else alert("出发站或目的站输入错误！");
+}
+function hideTrainDetail() {
+	document.getElementById("div1").style.display = "none";
+}
+function showTrBgColor(domObj, r, g, b) {
+	if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
+		var red = r.toString(16);
+		var green = g.toString(16);
+		var blue = b.toString(16);
+		if (red.length == 1) {
+			red = "0" + red;
+		}
+		if (green.length == 1) {
+			green = "0" + green;
+		}
+		if (blue.length == 1) {
+			blue = "0" + blue;
+		}
+		var colorCode = "#" + red + green + blue;
+		domObj.style.background = colorCode;
+	}
+}
+function setTextColor(domObj, r, g, b) {
+	if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
+		var red = r.toString(16);
+		var green = g.toString(16);
+		var blue = b.toString(16);
+		if (red.length == 1) {
+			red = "0" + red;
+		}
+		if (green.length == 1) {
+			green = "0" + green;
+		}
+		if (blue.length == 1) {
+			blue = "0" + blue;
+		}
+		var colorCode = "#" + red + green + blue;
+		domObj.style.color = colorCode;
+	}
+}
+function executeQuery() {
+	if (document.getElementById("div1").style.display == "block") {
+		document.getElementById("div1").style.display = "none";
+	}
+	if (document.getElementById("departure").value == "") {
+		alert("请输入出发站！");
+	}
+	else if (document.getElementById("arrival").value == "") {
+		alert("请输入目的站！");
+	}
+	else if (document.getElementById("departure").value == document.getElementById("arrival").value) {
+		alert("出发站不能和目的站相同！");
+	}
+	else if (isZmnameLegal()) {
+		var chufadi = document.getElementById("departure").value;
+		var mudidi = document.getElementById("arrival").value;
+		var riqi = document.getElementById("riqi").innerHTML;
+		var chosenDateNum = 0;
+		for (chosenDateNum = 1; chosenDateNum < 31; chosenDateNum++) {
+			if (riqi == document.getElementById("da" + chosenDateNum).name) break;
+		}
+		for (var j = 1; j < 31; j++) {
+			if (j != chosenDateNum) {
+				document.getElementById("da" + j).setAttribute("class", "date-not-clicked");
+			}
+			else document.getElementById("da" + j).setAttribute("class", "date-clicked");
+		}
+		document.getElementById("num-of-res").innerHTML = "&nbsp";
+		var querying = "<h3 align='center' style='color:#0006EF;z-index:5'><img src='/external/train/img/loading.gif' height='30' width='30'>查询中，请稍候……</h3>";
+		document.getElementById("query-shadow").style.display = "block";
+		if (document.getElementById("resp").innerHTML != querying) {
+			document.getElementById("resp").innerHTML = querying;
+			showResponse(chufadi, mudidi, riqi);
+		}
+		document.getElementById("query-shadow").style.display = "none";
+	}
+	else alert("出发站或目的站输入错误！");
+}
+function viewTrainDetail(anchorDOM) {
+	var trainDetailInfo = anchorDOM.id;
+	// trainDetailInfo形如：Z106|930000Z10602|TSJ|XAY|03-20|WMR|JNK
+	var infoArray = trainDetailInfo.split("|");
+	var iframeUrl = "train-detail.php?train_code=" + infoArray[0] + "&train_no=" + infoArray[1] + "&from_station_code=" + infoArray[2] + "&to_station_code=" + infoArray[3] + "&date_string=" + infoArray[4];
+	for (var i1 = 0; i1 < station_names_str.length; i1++) {
+		if (station_names_arr[i1][2] == infoArray[5]) break;
+	}
+	for (var i2 = 0; i2 < station_names_str.length; i2++) {
+		if (station_names_arr[i2][2] == infoArray[6]) break;
+	}
+	var sta1 = station_names_arr[i1][1]; // 始发站站名
+	var sta2 = station_names_arr[i2][1]; // 终点站站名
+	var trainType;
+	switch (infoArray[0].charAt(0)) {
+		case 'K':
+			trainType = "快速"; break;
+		case 'T':
+			trainType = "特快"; break;
+		case 'Z':
+			trainType = "直达"; break;
+		case 'G':
+			trainType = "高铁"; break;
+		case 'D':
+			trainType = "动车"; break;
+		case 'C':
+			trainType = "城际"; break;
+		case 'Y':
+			trainType = "旅游"; break;
+		default:
+			trainType = "普客"; break;
+		
+	}
+	document.getElementById("train-no-info").innerHTML = infoArray[0] + "次（" + sta1 + "—" + sta2 + "）&nbsp;" + trainType;
+	document.getElementById("train-details").src = iframeUrl;
+	document.getElementById("div1").style.display = "block";
+}
+function changeClass(aDom) {
+	var idForAnchor = aDom.id;
+	var idNumForAnchor = idForAnchor.substr(2);
+	aDom.setAttribute("class", "date-clicked");
+	for (var i = 1; i < 31; i++) {
+		if (i != idNumForAnchor) {
+			document.getElementById("da" + i).setAttribute("class", "date-not-clicked");
+		}
+	}
+	document.getElementById("riqi").innerHTML = aDom.name;
+	executeQuery();
+}
+</script>
+<body style="font-family:Microsoft YaHei;font-size:16px;" onload="initDate()">
+<div id="query-shadow" style='width:1366px;height:768px;background:rgba(128, 128, 128, 0.2);left:-10px;top:-15px;z-index:5;position:absolute;opacity:0.3;display:none'></div>
+<div id="top-of-page">
+<div id="title-image">
+<img src="/external/train/img/title-query-online.jpg" alt="站到站查询（在线版）" >
+</div>
+<div id="top-options">
+<table id="top-items" align="right">
+<tr>
+<td style="width:187px" align="center"><a id="to_offline" href="/external/train/trainquery_sta_to_sta.htm">切换为离线版</a></td>
+<td style="width:187px" align="center"><a id="query_ticket_price" href="query-ticket-price.htm" target="_blank">票价查询</a></td>
+<td style="width:187px" align="center"><a id="query_transit" href="query-transit.htm" target="_blank">中转查询</a></td>
+<td style="width:187px" align="center"><a id="query_start_time" href="query-start-time.htm" target="_blank">起售时间查询</a></td>
+</tr>
+</table>
+</div>
+</div>
+<br><br><br><br>
+<table id="query-div" align="center" style="width:1200px;" cellspacing="0">
+<tr style="line-height:30px" valign="middle">
+<td style="width:240px">出发站：<input type="text" id="departure" /></td>
+<td style="width:240px">目的站：<input type="text" id="arrival" /></td>
+<td style="width:120px">选择日期：</td>
+<td align="left" style="width:120px;border:1px solid #AAA" onclick="openDatePicker()">
+<span id="riqi" style="font-size:20px"></span>
+</td>
+<td align="center" style="width:225px;"><a href="javascript:;" id="alt" onclick="altDepArr()">返程</a></td>
+<td style="width:255px"><a href="javascript:;" id="query" onclick="executeQuery()">查询</a></td>
+</tr>
+</table><br>
+<table id="all-dates" align="center" style="width:1050px" cellspacing="0">
+<tr style="line-height:25px">
+<td align="center" style="width:70px"><a id="da1" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate1"></span><br>(周<span id="weeks1"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da2" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate2"></span><br>(周<span id="weeks2"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da3" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate3"></span><br>(周<span id="weeks3"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da4" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate4"></span><br>(周<span id="weeks4"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da5" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate5"></span><br>(周<span id="weeks5"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da6" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate6"></span><br>(周<span id="weeks6"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da7" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate7"></span><br>(周<span id="weeks7"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da8" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate8"></span><br>(周<span id="weeks8"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da9" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate9"></span><br>(周<span id="weeks9"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da10" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate10"></span><br>(周<span id="weeks10"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da11" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate11"></span><br>(周<span id="weeks11"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da12" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate12"></span><br>(周<span id="weeks12"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da13" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate13"></span><br>(周<span id="weeks13"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da14" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate14"></span><br>(周<span id="weeks14"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da15" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate15"></span><br>(周<span id="weeks15"></span>)</a></td>
+</tr>
+<tr style="line-height:25px">
+<td align="center" style="width:70px"><a id="da16" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate16"></span><br>(周<span id="weeks16"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da17" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate17"></span><br>(周<span id="weeks17"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da18" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate18"></span><br>(周<span id="weeks18"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da19" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate19"></span><br>(周<span id="weeks19"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da20" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate20"></span><br>(周<span id="weeks20"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da21" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate21"></span><br>(周<span id="weeks21"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da22" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate22"></span><br>(周<span id="weeks22"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da23" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate23"></span><br>(周<span id="weeks23"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da24" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate24"></span><br>(周<span id="weeks24"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da25" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate25"></span><br>(周<span id="weeks25"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da26" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate26"></span><br>(周<span id="weeks26"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da27" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate27"></span><br>(周<span id="weeks27"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da28" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate28"></span><br>(周<span id="weeks28"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da29" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate29"></span><br>(周<span id="weeks29"></span>)</a></td>
+<td align="center" style="width:70px"><a id="da30" class="date-not-clicked" href="javascript:;" onclick="changeClass(this)"><span id="monthdate30"></span><br>(周<span id="weeks30"></span>)</a></td>
+</tr>
+</table>
+<table align="center" style="width:1100px;display:block" border="0" cellpadding="1" cellspacing="1">
+<tr>
+<td align="left" id="tips" style="width:500px;font-size:16px;color:#0000EF">小提示：查询结果中，蓝色站名表示始发站，绿色站名表示终点站。</td>
+<td align="right" style="width:600px"><span id="num-of-res" style="font-size:16px">&nbsp;</span></td>
+</tr>
+</table>
+<table id="date-picker" style="width:315px">
+<tr>
+<td align="center"><a href="javascript:;" style="font-weight:bold;font-size:18px" onclick="lastMonth()"><</a></td>
+<td colspan="5" align="center" style="font-size:18px"><span id="yyyy" style="font-family:Arial">2017</span>年<span id="mm" style="font-family:Arial">3</span>月</td>
+<td align="center"><a href="javascript:;" style="font-weight:bold;font-size:18px" onclick="nextMonth()">></a></td>
+</tr>
+<tr>
+<td style="width:45px" align="center">日</td>
+<td style="width:45px" align="center">一</td>
+<td style="width:45px" align="center">二</td>
+<td style="width:45px" align="center">三</td>
+<td style="width:45px" align="center">四</td>
+<td style="width:45px" align="center">五</td>
+<td style="width:45px" align="center">六</td>
+</tr>
+<tr>
+<td id="d1" align="center">&nbsp;</td>
+<td id="d2" align="center">&nbsp;</td>
+<td id="d3" align="center">&nbsp;</td>
+<td id="d4" align="center">&nbsp;</td>
+<td id="d5" align="center">&nbsp;</td>
+<td id="d6" align="center">&nbsp;</td>
+<td id="d7" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d8" align="center">&nbsp;</td>
+<td id="d9" align="center">&nbsp;</td>
+<td id="d10" align="center">&nbsp;</td>
+<td id="d11" align="center">&nbsp;</td>
+<td id="d12" align="center">&nbsp;</td>
+<td id="d13" align="center">&nbsp;</td>
+<td id="d14" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d15" align="center">&nbsp;</td>
+<td id="d16" align="center">&nbsp;</td>
+<td id="d17" align="center">&nbsp;</td>
+<td id="d18" align="center">&nbsp;</td>
+<td id="d19" align="center">&nbsp;</td>
+<td id="d20" align="center">&nbsp;</td>
+<td id="d21" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d22" align="center">&nbsp;</td>
+<td id="d23" align="center">&nbsp;</td>
+<td id="d24" align="center">&nbsp;</td>
+<td id="d25" align="center">&nbsp;</td>
+<td id="d26" align="center">&nbsp;</td>
+<td id="d27" align="center">&nbsp;</td>
+<td id="d28" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d29" align="center">&nbsp;</td>
+<td id="d30" align="center">&nbsp;</td>
+<td id="d31" align="center">&nbsp;</td>
+<td id="d32" align="center">&nbsp;</td>
+<td id="d33" align="center">&nbsp;</td>
+<td id="d34" align="center">&nbsp;</td>
+<td id="d35" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d36" align="center">&nbsp;</td>
+<td id="d37" align="center">&nbsp;</td>
+<td id="d38" align="center">&nbsp;</td>
+<td id="d39" align="center">&nbsp;</td>
+<td id="d40" align="center">&nbsp;</td>
+<td id="d41" align="center">&nbsp;</td>
+<td id="d42" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="close-datepicker" colspan="3" align="center"><a href="javascript:;" style="font-weight:bold" onclick="closeDatePicker()">关闭</a></td>
+<td align="center"></td>
+<td id="choose-today" colspan="3" align="center"><a href="javascript:;" style="font-weight:bold" onclick="chooseToday()">今天</a></td>
+</tr>
+</table>
+<table id="results-head" align="center" border="0" cellpadding="1" cellspacing="0" style="width:1200px">
+<tr id="thead" style="line-height:45px">
+<th style="width:100px">车次</th>
+<th style="width:250px">到发时刻</th>
+<th style="width:60px">历时</th>
+<th style="width:120px">运行区间</th>
+<th style="width:67px">商务</th>
+<th style="width:67px">特等</th>
+<th style="width:67px">一等</th>
+<th style="width:67px">二等</th>
+<th style="width:67px">高软</th>
+<th style="width:67px">软座</th>
+<th style="width:67px">软卧</th>
+<th style="width:67px">硬卧</th>
+<th style="width:67px">硬座</th>
+<th style="width:67px">无座</th>
+</tr>
+</table>
+<span id="resp" style="position:relative;top:-2px"></span>
+<div id="div1">
+<div id="div2"><span id="train-no-info" style="color:#0004FA;font-size:21px;font-weight:bold"></span></div>
+<div id="div3"><a id="hide-train-detail" href="javascript:;" onclick="hideTrainDetail()">×</a></div>
+<table id="train-thead" border="0.5px" cellpadding="1" cellspacing="1">
+<tr style='line-height:36px'>
+<th style='width:50px'>站序</th>
+<th style='width:120px'>站名</th>
+<th style='width:95px'>到点</th>
+<th style='width:95px'>开点</th>
+<th style='width:105px'>停留时间</th>
+<th style='width:270px'>正晚点信息</th>
+<th style='width:15px'>&nbsp;</th>
+</tr>
+</table>
+<div id="div4"><iframe id="train-details" style="width:750px;height:300px" frameborder="0" marginwidth="0px"></iframe></div>
+<div id="div5"><span style="font-size:15px;font-weight:bold">注：仅支持查询过去1小时和未来3小时的正晚点信息，正晚点信息查询结果仅供参考，具体请以车站公告为准！</span></div>
+</div>
+<div id="return-to-top" style="width:40px;height:40px">
+<a href="#top"><img src="/external/train/img/return-to-top.jpg"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+input#train_no {
+	width:100px;
+	font-family:Microsoft YaHei;
+	font-size:18px;
+	font-weight:bold;
+}
+table#top_items {
+	text-align:center;
+	height:40px;
+	background:linear-gradient(#3CB46E, #1E9650, #007832);
+}
+table#query_div {
+	text-align:center;
+	height:50px;
+}
+table#results {
+	display:block;
+	text-align:center;
+	border:1px solid #FFF;
+	border-radius:3px;
+}
+tr#thead {
+	background:linear-gradient(#50B4E6, #3296C8, #1478AA);
+	color:#FAFAFA;
+}
+a, a:HOVER, a:ACTIVE, a:VISITED {
+	text-decoration:none;
+}
+a#trainquery_sta, a#trainquery_sta_to_sta, a#trainquery_train_no {
+	color:#FAFAFA;
+	font-weight:bold;
+}
+#query {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#5050DC, #2828B4, #00008C);
+}
+#query:HOVER {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#6E6EFA, #4646D2, #1E1EAA);
+}
+#query:ACTIVE {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#1E1EAA, #4646D2, #6E6EFA);
+}

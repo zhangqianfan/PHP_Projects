@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>中转查询</title>
+<link rel="stylesheet" type="text/css" href="css/query-transit-page.css" >
+</head>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/query-by-ajax4.js"></script>
+<script src="js/date-picker.js"></script>
+<script src="js/station-name.js"></script>
+<script type="text/javascript">
+function initDate() {
+	var d = new Date();
+	var year = d.getFullYear();
+	var month = (d.getMonth() < 9) ? "0" + (d.getMonth() + 1) : d.getMonth() + 1;
+	var day = (d.getDate() < 10) ? "0" + d.getDate() : d.getDate();
+	var fullDate = year + "-" + month + "-" + day;
+	document.getElementById("riqi").innerHTML = fullDate;
+}
+function isZmnameLegal() { // 判断出发站、中转站、目的站站名是否合法
+	var fromSta = document.getElementById("departure").value;
+	var tranSta = document.getElementById("transfer").value;
+	var toSta = document.getElementById("arrival").value;
+	if (fromSta && tranSta && toSta) {
+		for (var p1 = 0; p1 < station_names_str.length; p1++) {
+			if (station_names_arr[p1][1] == fromSta) break;
+		}
+		for (var p2 = 0; p2 < station_names_str.length; p2++) {
+			if (station_names_arr[p2][1] == tranSta) break;
+		}
+		for (var p3 = 0; p3 < station_names_str.length; p3++) {
+			if (station_names_arr[p3][1] == toSta) break;
+		}
+		return p1 < station_names_str.length && p2 < station_names_str.length && p3 < station_names_str.length;
+	}
+	return false;
+}
+function hideTrainDetail() {
+	document.getElementById("div1").style.display = "none";
+}
+function showTrBgColor(domObj, r, g, b) {
+	if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
+		var red = r.toString(16);
+		var green = g.toString(16);
+		var blue = b.toString(16);
+		if (red.length == 1) {
+			red = "0" + red;
+		}
+		if (green.length == 1) {
+			green = "0" + green;
+		}
+		if (blue.length == 1) {
+			blue = "0" + blue;
+		}
+		var colorCode = "#" + red + green + blue;
+		domObj.style.background = colorCode;
+	}
+}
+function setTextColor(domObj, r, g, b) {
+	if (r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
+		var red = r.toString(16);
+		var green = g.toString(16);
+		var blue = b.toString(16);
+		if (red.length == 1) {
+			red = "0" + red;
+		}
+		if (green.length == 1) {
+			green = "0" + green;
+		}
+		if (blue.length == 1) {
+			blue = "0" + blue;
+		}
+		var colorCode = "#" + red + green + blue;
+		domObj.style.color = colorCode;
+	}
+}
+function executeQuery() {
+	if (document.getElementById("div1").style.display == "block") {
+		document.getElementById("div1").style.display = "none";
+	}
+	if (document.getElementById("departure").value == "") {
+		alert("请输入出发站！");
+	}
+	else if (document.getElementById("arrival").value == "") {
+		alert("请输入目的站！");
+	}
+	else if (document.getElementById("departure").value == document.getElementById("arrival").value) {
+		alert("出发站不能和目的站相同！");
+	}
+	else if (isZmnameLegal()) {
+		var chufadi = document.getElementById("departure").value;
+		var zhongzhuan = document.getElementById("transfer").value;
+		var mudidi = document.getElementById("arrival").value;
+		var riqi = document.getElementById("riqi").innerHTML;
+		document.getElementById("resp").innerHTML = "<h3 align='center' style='color:#0006EF'>查询中，请稍候……</h3>";
+		showResponse(chufadi, zhongzhuan, mudidi, riqi);
+	}
+	else alert("出发站或目的站输入错误！");
+}
+function viewTrainDetail(anchorDOM) {
+	var trainDetailInfo = anchorDOM.id;
+	var infoArray = trainDetailInfo.split("|");
+	var iframeUrl = "train-detail.php?train_code=" + infoArray[0] + "&train_no=" + infoArray[1] + "&from_station_code=" + infoArray[2] + "&to_station_code=" + infoArray[3] + "&date_string=" + infoArray[4];
+	for (var i1 = 0; i1 < station_names_str.length; i1++) {
+		if (station_names_arr[i1][2] == infoArray[5]) break;
+	}
+	for (var i2 = 0; i2 < station_names_str.length; i2++) {
+		if (station_names_arr[i2][2] == infoArray[6]) break;
+	}
+	var sta1 = station_names_arr[i1][1]; // 始发站站名
+	var sta2 = station_names_arr[i2][1]; // 终点站站名
+	var trainType;
+	switch (infoArray[0].charAt(0)) {
+		case 'K':
+			trainType = "快速"; break;
+		case 'T':
+			trainType = "特快"; break;
+		case 'Z':
+			trainType = "直达"; break;
+		case 'G':
+			trainType = "高铁"; break;
+		case 'D':
+			trainType = "动车"; break;
+		case 'C':
+			trainType = "城际"; break;
+		case 'Y':
+			trainType = "旅游"; break;
+		default:
+			trainType = "普客"; break;
+		
+	}
+	document.getElementById("train-no-info").innerHTML = infoArray[0] + "次（" + sta1 + "—" + sta2 + "）&nbsp;" + trainType;
+	document.getElementById("train-details").src = iframeUrl;
+	document.getElementById("div1").style.display = "block";
+}
+</script>
+<body style="font-family:Microsoft YaHei;font-size:16px;" onload="initDate()">
+<div id="top-of-page">
+<div id="title-image">
+<img src="/external/train/img/title-query-transit.jpg" alt="中转查询" >
+</div>
+<div id="top-options">
+<table id="top-items" align="right">
+<tr>
+<td style="width:187px" align="center"><a id="to_offline" href="/external/train/trainquery_sta_to_sta.htm" target="_blank">站站查询（离线版）</a></td>
+<td style="width:187px" align="center"><a id="query_transit" href="query-by-sta-to-sta.htm" target="_blank">站站查询</a></td>
+<td style="width:187px" align="center"><a id="query_train_no" href="query-ticket-price.htm" target="_blank">票价查询</a></td>
+<td style="width:187px" align="center"><a id="query_start_time" href="query-start-time.htm" target="_blank">起售时间查询</a></td>
+</tr>
+</table>
+</div>
+</div>
+<br><br><br><br>
+<table id="query-div" align="center" style="width:1200px;" cellspacing="0">
+<tr style="line-height:30px" valign="middle">
+<td style="width:225px">出发站：<input type="text" id="departure" /></td>
+<td style="width:225px">中转站：<input type="text" id="transfer" /></td>
+<td style="width:225px">目的站：<input type="text" id="arrival" /></td>
+<td style="width:120px">选择日期：</td>
+<td align="left" style="width:120px;border:1px solid #AAA" onclick="openDatePicker()">
+<span id="riqi" style="font-size:20px"></span>
+</td>
+<td style="width:60px">&nbsp;</td>
+<td style="width:225px"><a href="javascript:;" id="query" onclick="executeQuery()">查询</a></td>
+</tr>
+</table>
+<table align="center" border="0" cellpadding="1" cellspacing="1">
+<tr>
+<td align="center" id="tips" style="width:500px;font-size:16px;color:#0000EF">小提示：查询结果中，蓝色站名表示始发站，绿色站名表示终点站。</td>
+</tr>
+</table>
+<table id="date-picker" style="width:315px">
+<tr>
+<td align="center"><a href="javascript:;" style="font-weight:bold;font-size:18px" onclick="lastMonth()"><</a></td>
+<td colspan="5" align="center" style="font-size:18px"><span id="yyyy" style="font-family:Arial"></span>年<span id="mm" style="font-family:Arial"></span>月</td>
+<td align="center"><a href="javascript:;" style="font-weight:bold;font-size:18px" onclick="nextMonth()">></a></td>
+</tr>
+<tr>
+<td style="width:45px" align="center">日</td>
+<td style="width:45px" align="center">一</td>
+<td style="width:45px" align="center">二</td>
+<td style="width:45px" align="center">三</td>
+<td style="width:45px" align="center">四</td>
+<td style="width:45px" align="center">五</td>
+<td style="width:45px" align="center">六</td>
+</tr>
+<tr>
+<td id="d1" align="center">&nbsp;</td>
+<td id="d2" align="center">&nbsp;</td>
+<td id="d3" align="center">&nbsp;</td>
+<td id="d4" align="center">&nbsp;</td>
+<td id="d5" align="center">&nbsp;</td>
+<td id="d6" align="center">&nbsp;</td>
+<td id="d7" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d8" align="center">&nbsp;</td>
+<td id="d9" align="center">&nbsp;</td>
+<td id="d10" align="center">&nbsp;</td>
+<td id="d11" align="center">&nbsp;</td>
+<td id="d12" align="center">&nbsp;</td>
+<td id="d13" align="center">&nbsp;</td>
+<td id="d14" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d15" align="center">&nbsp;</td>
+<td id="d16" align="center">&nbsp;</td>
+<td id="d17" align="center">&nbsp;</td>
+<td id="d18" align="center">&nbsp;</td>
+<td id="d19" align="center">&nbsp;</td>
+<td id="d20" align="center">&nbsp;</td>
+<td id="d21" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d22" align="center">&nbsp;</td>
+<td id="d23" align="center">&nbsp;</td>
+<td id="d24" align="center">&nbsp;</td>
+<td id="d25" align="center">&nbsp;</td>
+<td id="d26" align="center">&nbsp;</td>
+<td id="d27" align="center">&nbsp;</td>
+<td id="d28" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d29" align="center">&nbsp;</td>
+<td id="d30" align="center">&nbsp;</td>
+<td id="d31" align="center">&nbsp;</td>
+<td id="d32" align="center">&nbsp;</td>
+<td id="d33" align="center">&nbsp;</td>
+<td id="d34" align="center">&nbsp;</td>
+<td id="d35" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="d36" align="center">&nbsp;</td>
+<td id="d37" align="center">&nbsp;</td>
+<td id="d38" align="center">&nbsp;</td>
+<td id="d39" align="center">&nbsp;</td>
+<td id="d40" align="center">&nbsp;</td>
+<td id="d41" align="center">&nbsp;</td>
+<td id="d42" align="center">&nbsp;</td>
+</tr>
+<tr>
+<td id="close-datepicker" colspan="3" align="center"><a href="javascript:;" style="font-weight:bold" onclick="closeDatePicker()">关闭</a></td>
+<td align="center"></td>
+<td id="choose-today" colspan="3" align="center"><a href="javascript:;" style="font-weight:bold" onclick="chooseToday()">今天</a></td>
+</tr>
+</table>
+<span id="resp" style="position:relative;top:-2px"></span>
+<div id="div1">
+<div id="div2"><span id="train-no-info" style="color:#0004FA;font-size:21px;font-weight:bold"></span></div>
+<div id="div3"><a id="hide-train-detail" href="javascript:;" onclick="hideTrainDetail()">×</a></div>
+<table id="train-thead" border="0.5px" cellpadding="1" cellspacing="1">
+<tr style='line-height:36px'>
+<th style='width:50px'>站序</th>
+<th style='width:120px'>站名</th>
+<th style='width:95px'>到点</th>
+<th style='width:95px'>开点</th>
+<th style='width:105px'>停留时间</th>
+<th style='width:270px'>正晚点信息</th>
+<th style='width:15px'>&nbsp;</th>
+</tr>
+</table>
+<div id="div4">
+<iframe id="train-details" style="width:750px;height:300px" frameborder="0" marginwidth="0px"></iframe>
+</div>
+<div id="div5"><span style="font-size:15px;font-weight:bold">注：仅支持查询过去1小时和未来3小时的正晚点信息，正晚点信息查询结果仅供参考，具体请以车站公告为准！</span>
+</div>
+</div>
+<div id="return-to-top" style="width:40px;height:40px">
+<a href="#top"><img src="/external/train/img/return-to-top.jpg"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+input#station {
+	width:100px;
+	font-family:Microsoft YaHei;
+	font-size:18px;
+	font-weight:bold;
+}
+table {
+	text-align:center;
+}
+table#top_items {
+	text-align:center;
+	height:40px;
+	background:linear-gradient(#3CB46E, #1E9650, #007832);
+}
+table#query_div {
+	text-align:center;
+	height:50px;
+}
+table#results {
+	display:block;
+	text-align:center;
+	border:1px solid #FFF;
+	border-radius:3px;
+}
+#div1 {
+	background:#E6E6F0;
+	display:none;
+	position:fixed;
+	align:center;
+	width:570px;
+	height:330px;
+	border:1px solid #000;
+	top:24%;
+	left:28.5%;
+	z-index:1;
+}
+#div2 {
+	width:510px;
+	height:30px;
+	float:left;
+	margin-top:1%;
+	margin-left:2%;
+}
+#div3 {
+	width:30px;
+	height:30px;
+	float:right;
+	margin-top:0;
+}
+#div4 {
+	align:center;
+	width:570px;
+	height:288px;
+	margin-bottom:0;
+	overflow:auto;
+}
+#return_to_top {
+	position:fixed;
+	left:83%;
+	top:75%;
+}
+tr#thead {
+	background:linear-gradient(#50B4E6, #3296C8, #1478AA);
+	color:#FAFAFA;
+}
+a, a:HOVER, a:ACTIVE, a:VISITED {
+	text-decoration:none;
+}
+a#trainquery_sta, a#trainquery_sta_to_sta, a#trainquery_train_no {
+	color:#FAFAFA;
+	font-weight:bold;
+}
+#hide_train_table0 {
+	color:#000;
+	font-size:24px;
+	font-weight:bold;
+}
+#hide_train_table0:HOVER, #hide_train_table0:ACTIVE {
+	color:#FA0606;
+	font-weight:bold;
+}
+a.train_result {
+	color:#FAFAFA;
+}
+a.train_result:HOVER, a.train_result:ACTIVE {
+	color:#FAFAFA;
+	text-decoration:underline;
+}
+#query {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#5050DC, #2828B4, #00008C);
+}
+#query:HOVER {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#6E6EFA, #4646D2, #1E1EAA);
+}
+#query:ACTIVE {
+	display:block;
+	color:#FFF;
+	border-radius:4px;
+	width:100px;
+	height:30px;
+	background:linear-gradient(#1E1EAA, #4646D2, #6E6EFA);
+}
